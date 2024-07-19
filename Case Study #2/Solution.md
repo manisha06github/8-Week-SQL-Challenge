@@ -71,6 +71,7 @@ FROM customer_orders;
 | pizza_ordered |
 |---------------|
 |      14       |
+Total 14 pizzas were ordered.
 
 ### 2. How many unique customer orders were made?
 ````sql
@@ -81,6 +82,7 @@ FROM customer_orders;
 | unique_orders |
 |---------------|
 |      10       |
+There were 10 unique customer orders made.
 
 ### 3. How many successful orders were delivered by each runner?
 ````sql
@@ -95,6 +97,7 @@ GROUP BY runner_id;
 |       1       |        4        |
 |       2       |        3        |
 |       3       |        1        |
+Runner 1 had 4, runner 2 had 3 and runner 3 had 1 successful order delivered respectively.
 
 ### 4. How many of each type of pizza was delivered?
 ````sql
@@ -109,14 +112,15 @@ GROUP BY c.pizza_id;
 |------------|---------|
 |     1      |    9    |
 |     2      |    3    |
+There were total 9 pizza delivered with pizza id 1 and 3 pizza with pizza id 2.
 
 ### 5. How many Vegetarian and Meatlovers were ordered by each customer?
- ````sql
- SELECT c.customer_id, p.pizza_name, COUNT(c.pizza_id) total_ordered
- FROM customer_orders c
- JOIN pizza_names p ON c.pizza_id = p.pizza_id
- GROUP BY c.customer_id, p.pizza_name
- ORDER BY c.customer_id ASC;
+````sql
+SELECT c.customer_id, p.pizza_name, COUNT(c.pizza_id) total_ordered
+FROM customer_orders c
+JOIN pizza_names p ON c.pizza_id = p.pizza_id
+GROUP BY c.customer_id, p.pizza_name
+ORDER BY c.customer_id ASC;
 ````
 #### Answer:
 | customer_id | pizza_name | total_ordered |
@@ -145,6 +149,7 @@ FROM (
 | maxpizza_delivered |
 |--------------------|
 |         3          |
+Maximum 3 pizzas were delivered in a single order.
 
 ### 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
 ````sql
@@ -160,11 +165,71 @@ SUM(CASE
 FROM customer_orders c
 JOIN runner_orders r ON c.order_id = r.order_id
 WHERE r.cancellation IS NULL
+GROUP BY c.customer_id
+ORDER BY c.customer_id;
+````
+#### Answer:
+| customer_id | pizza | atleast_1_change | no_change |
+|-------------|-------|------------------|-----------|
+|     101	    |   2  	|         0        |     2     |
+|     102     |	  3   |         0        |     3     |
+|     103	    |   3   |         3        |     0     |
+|     104	    |   3   |         2        |     1     |
+|     105	    |   1   |         1        |     0     |
+
+### 8. How many pizzas were delivered that had both exclusions and extras?
+````sql
+SELECT c.customer_id, COUNT(c.pizza_id) AS pizza,
+SUM(CASE 
+    WHEN c.exclusions IS NOT NULL AND c.extras IS NOT NULL THEN 1 
+    ELSE 0
+    END) AS both_change
+FROM customer_orders c
+JOIN runner_orders r ON c.order_id = r.order_id
+WHERE r.cancellation IS NULL
 GROUP BY c.customer_id;
 ````
+#### Answer:
+| customer_id | pizza | both_change | 
+|-------------|-------|-------------|
+|     101	    |   2  	|      0      |
+|     102     |	  3   |      0      |
+|     103	    |   3   |      0      |
+|     104	    |   3   |      1      |
+|     105	    |   1   |      0      |
 
+### 9. What was the total volume of pizzas ordered for each hour of the day?
+````sql
+SELECT HOUR(order_time) AS order_hour,
+COUNT(pizza_id) AS pizza_vol
+FROM customer_orders
+GROUP BY HOUR(order_time)
+ORDER BY HOUR(order_time);
+````
+#### Answer:
+| order_hour | pizza_vol |
+|------------|-----------|
+|     11     |     1     |
+|     13     |     3     |
+|     18     |     3     |
+|     19     |     1     |
+|     21     |     3     |
+|     23     |     3     |
 
-
-
+### 10. What was the volume of orders for each day of the week?
+````sql
+SELECT DAYNAME(order_time) AS order_day,
+COUNT(pizza_id) AS pizza_vol
+FROM customer_orders
+GROUP BY DAYNAME(order_time)
+ORDER BY DAYNAME(order_time);
+````
+#### Answer:
+| order_day  | pizza_vol |
+|------------|-----------|
+|   Friday   |     1     |
+|  Saturday  |     5     |
+|  Thursday  |     3     |
+|  Wednesday |     5     |
 
 ***
