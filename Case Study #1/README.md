@@ -20,3 +20,5 @@ Danny has shared with you 3 key datasets for this case study:
 .sales
 .menu
 .members
+
+![image](https://github.com/user-attachments/assets/f8915bd3-b62c-4771-8d83-67acd1d680ea)
