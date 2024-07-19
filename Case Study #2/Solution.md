@@ -68,9 +68,35 @@ SELECT COUNT(*) AS pizza_ordered
 FROM customer_orders;
 ````
 #### Answer:
-
 | pizza_ordered |
 |---------------|
 |      14       |
+
+### 2. How many unique customer orders were made?
+````sql
+SELECT COUNT(DISTINCT order_id) AS unique_orders
+FROM customer_orders;
+````
+#### Answer:
+| unique_orders |
+|---------------|
+|      10       |
+
+### 3. How many successful orders were delivered by each runner?
+````sql
+SELECT runner_id, COUNT(order_id) AS success_order
+FROM runner_orders 
+WHERE cancellation IS NULL
+GROUP BY runner_id;
+````
+#### Answer:
+|   runner_id   |  success_order  |
+|---------------|-----------------|
+|       1       |        4        |
+|       2       |        3        |
+|       3       |        1        |
+
+
+
 
 ***
