@@ -71,6 +71,7 @@ FROM customer_orders;
 | pizza_ordered |
 |---------------|
 |      14       |
+
 Total 14 pizzas were ordered.
 
 ### 2. How many unique customer orders were made?
@@ -82,6 +83,7 @@ FROM customer_orders;
 | unique_orders |
 |---------------|
 |      10       |
+
 There were 10 unique customer orders made.
 
 ### 3. How many successful orders were delivered by each runner?
@@ -97,6 +99,7 @@ GROUP BY runner_id;
 |       1       |        4        |
 |       2       |        3        |
 |       3       |        1        |
+
 Runner 1 had 4, runner 2 had 3 and runner 3 had 1 successful order delivered respectively.
 
 ### 4. How many of each type of pizza was delivered?
@@ -112,6 +115,7 @@ GROUP BY c.pizza_id;
 |------------|---------|
 |     1      |    9    |
 |     2      |    3    |
+
 There were total 9 pizza delivered with pizza id 1 and 3 pizza with pizza id 2.
 
 ### 5. How many Vegetarian and Meatlovers were ordered by each customer?
@@ -149,6 +153,7 @@ FROM (
 | maxpizza_delivered |
 |--------------------|
 |         3          |
+
 Maximum 3 pizzas were delivered in a single order.
 
 ### 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
