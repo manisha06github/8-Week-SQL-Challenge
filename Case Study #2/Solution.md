@@ -96,6 +96,74 @@ GROUP BY runner_id;
 |       2       |        3        |
 |       3       |        1        |
 
+### 4. How many of each type of pizza was delivered?
+````sql
+SELECT c.pizza_id, COUNT(c.pizza_id) as total
+FROM customer_orders c
+JOIN runner_orders r ON c.order_id = r.order_id
+WHERE r.cancellation IS NULL
+GROUP BY c.pizza_id;
+````
+#### Answer:
+|  pizza_id  |  total  |
+|------------|---------|
+|     1      |    9    |
+|     2      |    3    |
+
+### 5. How many Vegetarian and Meatlovers were ordered by each customer?
+ ````sql
+ SELECT c.customer_id, p.pizza_name, COUNT(c.pizza_id) total_ordered
+ FROM customer_orders c
+ JOIN pizza_names p ON c.pizza_id = p.pizza_id
+ GROUP BY c.customer_id, p.pizza_name
+ ORDER BY c.customer_id ASC;
+````
+#### Answer:
+| customer_id | pizza_name | total_ordered |
+|-------------|------------|---------------|
+|     101	    | Meatlovers	|       2       |
+|     101     |	Vegetarian	|       1       |
+|     102	    | Meatlovers	|       2       |
+|     102	    | Vegetarian	|       1       |
+|     103	    | Meatlovers	|       3       |
+|     103	    | Vegetarian	|       1       |
+|     104	    | Meatlovers	|       3       |
+|     105	    | Vegetarian	|       1       |
+
+### 6.What was the maximum number of pizzas delivered in a single order?
+````sql
+SELECT MAX(total_pizza) AS maxpizza_delivered
+FROM (
+    SELECT c.order_id, COUNT(c.pizza_id) total_pizza
+    FROM customer_orders c
+    JOIN runner_orders r ON c.order_id = r.order_id
+    WHERE r.cancellation IS NULL
+    GROUP BY c.order_id
+    ) AS pizza_delivered;
+````
+#### Answer:
+| maxpizza_delivered |
+|--------------------|
+|         3          |
+
+### 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+````sql
+SELECT c.customer_id, COUNT(c.pizza_id) AS pizza,
+SUM(CASE 
+    WHEN c.exclusions IS NOT NULL OR c.extras IS NOT NULL THEN 1 
+    ELSE 0
+    END) AS atleast_1_change,
+SUM(CASE
+    WHEN c.exclusions IS NULL AND c.extras IS NULL THEN 1
+    ELSE 0
+    END) AS no_change
+FROM customer_orders c
+JOIN runner_orders r ON c.order_id = r.order_id
+WHERE r.cancellation IS NULL
+GROUP BY c.customer_id;
+````
+
+
 
 
 
